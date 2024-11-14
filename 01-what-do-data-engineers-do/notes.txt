@@ -1,1 +1,8 @@
+Imagine that you are hired to enable data analytics; where would you start? 
+-Figure out the ETL process the company uses
+-Figure out the modeling techniques, frameworks, and warehouses used
 
+How would you go about gathering requirements?
+-I would speak to the data team and ask about the current land of the land
+-I would ask stakeholders, analysts, and other users what they are using the data for and want to get out of it
+-I would explore the data warehouses on my own to figure out what I like and dislike, and what can be modified

@@ -1,1 +1,67 @@
+Windows Exercises
 
+%%sql
+select 
+    o_custkey
+    ,o_orderdate
+    ,o_totalprice
+    ,avg(o_totalprice) over (partition by o_custkey order by o_orderdate) as running_sum
+from
+    orders
+where
+    o_custkey = 4
+order by
+    o_orderdate
+------------------------------------
+%%sql
+
+select
+    *
+from
+(
+select
+    o_custkey
+    ,o_orderdate
+    ,rank() over (partition by o_orderdate order by o_totalprice) as rnk
+from
+    orders
+)
+where
+    rnk <= 3
+order by
+    o_orderdate
+limit 10
+------------------------------------
+%%sql
+
+select
+    o_orderdate
+    ,o_custkey
+    ,o_totalprice
+    ,o_totalprice - lag(o_totalprice) over (partition by o_custkey order by o_orderdate) as totalprice_diff
+from
+    orders
+limit
+    10
+---------------------------------
+%%sql
+
+select
+    order_month
+    ,o_custkey
+    ,total_price
+    ,round(avg(total_price) over (partition by o_custkey order by cast(order_month as date) range between interval '1' month preceding and interval '1' month following),2) as consecutive_3_mo_avg
+    ,round(avg(total_price) over (partition by o_custkey order by order_month rows between 1 preceding and 1 following),2) as three_mo_total_price_avg
+from
+    (
+        select
+            strftime(o_orderdate, '%Y-%m-01') as order_month
+            ,o_custkey
+            ,sum(o_totalprice) as total_price
+        from
+            orders
+        group by
+            1
+            ,2
+    )
+limit 10
